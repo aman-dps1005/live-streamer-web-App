@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Stream-yard clone</h1>
+
+    <div>
+        <video id="user-video" autoplay muted></video>
+        <button id="start-btn">Start</button>
+    </div>
+
+    <input id="urlInput" placeholder="Enter your stream Url here"/>
+    <input id="apiKeyfield" placeholder="Enter your api key here" type="password"/>
+    <div id="urlSender">click to send url</div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>
