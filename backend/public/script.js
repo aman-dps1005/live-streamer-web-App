@@ -3,29 +3,40 @@ const startButton = document.getElementById('start-btn');
 const urlInput = document.getElementById('urlInput');
 const apiInput = document.getElementById('apiKeyfield');
 const urlSender = document.getElementById('urlSender');
+const stopButton=document.getElementById('stop-btn');
 
-const state = { media: null };
+const state = { media: null ,mediaRecorder:null};
 const socket = io();
 const urlBody = { url: null, apiKey: null };
 
 startButton.addEventListener('click', async () => {
     if (state.media) {
-        const mediaRecorder = new MediaRecorder(state.media, {
+        state.mediaRecorder = new MediaRecorder(state.media, {
             audioBitsPerSecond: 128000,
             videoBitsPerSecond: 2500000,
             framerate: 25
         });
 
-        mediaRecorder.ondataavailable = ev => {
+        state.mediaRecorder.ondataavailable = ev => {
             console.log("binary stream available", ev.data);
             socket.emit('binaryStream', ev.data);
         };
 
-        mediaRecorder.start(25);
+        state.mediaRecorder.start(25);
     } else {
         console.log("Media stream not available");
     }
 });
+
+stopButton.addEventListener('click',async ()=>{
+    if(state.mediaRecorder && state.mediaRecorder.state !=='inactive'){
+        state.mediaRecorder.stop();
+        console.log("media recording stopped");
+    }
+    else{
+        console.log("no active media recording");
+    }
+})
 
 window.addEventListener('load', async () => {
     const media = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
@@ -43,7 +54,7 @@ apiInput.addEventListener('change', (e) => {
 
 urlSender.addEventListener('click', async () => {
     try {
-        const response = await fetch("http://localhost:8080/streamId", {
+        const response = await fetch("/streamId", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
