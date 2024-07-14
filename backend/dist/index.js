@@ -11,7 +11,12 @@ const child_process_1 = require("child_process");
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
-const io = new socket_io_1.Server(server);
+const io = new socket_io_1.Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
 let ffmpegProcess = null;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
